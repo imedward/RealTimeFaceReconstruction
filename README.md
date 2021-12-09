@@ -1,34 +1,13 @@
-# StyleGAR
-# TODO: add arxiv link
-Implementation of Inverting Generative Adversarial Renderer for Face Reconstruction 
+# Towards Real Time Face Reconstruction
 
-# TODO: for test
-Currently, some models are being modified with open-code resources (3dmm, landmark, segmentation), to get rid of commercial models, will update soon.
+## Abstract
+Given a monocular face image as input, 3D face geometry reconstruction aims to recover a corresponding 3D face mesh. Recently, both optimization-based and learning-based face reconstruction methods have taken advantage of the emerging differentiable renderer and shown promising results. Optimization-based methods achieve impressive reconstruction results with high fidelity, but the time required to perform the optimization is unacceptable in real-time circumstance. On the other hand, efficient deep neural networks present promising capability to achieve plausible reconstruction results while consuming much less time. However, due to the lack of high-fidelity data, previous deep neural networks fail to achieve competitive results as the optimization-based counterparts. In this project, we propose to distill the knowledge of the optimization-based face reconstruction methods into an efficient convolutional neural network for real time face reconstruction. Specifically, we first capture a multi-view face dataset with a 30-camera stage and reconstruct the face meshes Shape From Motion (SFM) to obtain the 3D Morphable Models (3DMM) bases. Then we apple the optimization-based method on a large in-the-wild dataset to create pseudo labels. Finally, we explore a large model and an efficient tiny neural network, which are trained in a novel knowledge distillation manner. Equipped with the pseudo labels and the novel knowledge distillation method, the tiny neural network achieves even better performance then the large network, while consuming only 5.5 mili-second for each frame. Extensive experiments have been conducted to demonstrate the effectiveness of the proposed framework.
 
-## Usage
-First align all faces according to landmarks:
+## Framework
+![avatar](figures/framework.png)
 
-> python uitls_face.py --lmk dlib --bfm BFM.mat --output OUTPUT_PATH DATASET_PATH
-
-This will align according to specified landmark model, you can change to other kinds of landmark detector
-
-Create lmdb datasets:
-
-> python prepare_data.py --out LMDB_PATH --n_worker N_WORKER --size SIZE1,SIZE2,SIZE3,... OUTPUT_PATH
-
-This will convert images to jpeg and pre-resizes it. This implementation does not use progressive growing, but you can create multiple resolution datasets using size arguments with comma separated lists, for the cases that you want to try another resolutions later.
-
-Then you can train model in distributed settings
-
-> python -m torch.distributed.launch --nproc_per_node=N_GPU --master_port=PORT train.py --batch BATCH_SIZE LMDB_PATH
-
-train.py supports Weights & Biases logging. If you want to use it, add --wandb arguments to the script.
-
-### Generate samples
-
-> python generate.py --sample N_FACES --pics N_PICS --ckpt PATH_CHECKPOINT
-
-You should change your size (--size 256 for example) if you train with another dimension.
+## Results
+![avatar](figures/facerecon_qualitative.png)
 
 ## License
 
